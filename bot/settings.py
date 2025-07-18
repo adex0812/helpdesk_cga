@@ -77,12 +77,12 @@ WSGI_APPLICATION = 'bot.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'complain',
-        'USER': 'postgres',
-        'PASSWORD': 'secret99',
-        'HOST': 'localhost',
-        'PORT': '15001',
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'DESDBN',
+        'USER': 'USR_CDM',
+        'PASSWORD': 'CGADSSDPS2023',
+        'HOST': '10.60.160.44',
+        'PORT': '1521',
     }
 }
 
