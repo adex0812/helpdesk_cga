@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 
 class IncUserManager(BaseUserManager):
@@ -11,11 +11,9 @@ class IncUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, nik, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
         return self.create_user(nik, password, **extra_fields)
 
-class IncUser(AbstractBaseUser, PermissionsMixin):
+class IncUsers(AbstractBaseUser):
     id = models.BigIntegerField(primary_key=True)
     nik = models.CharField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
@@ -26,14 +24,12 @@ class IncUser(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
 
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-
+    last_login = None
     objects = IncUserManager()
 
     USERNAME_FIELD = 'nik'
     REQUIRED_FIELDS = ['email']
 
     class Meta:
-        db_table = 'inc_user'
-        managed = True  
+        db_table = 'inc_users'
+        managed = False  

@@ -86,6 +86,21 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'complaints',         # Nama database
+#         'USER': 'root',               # Username MySQL
+#         'PASSWORD': '',               # Kosongin kalau nggak ada password
+#         'HOST': '10.35.49.86',        # IP Server MySQL
+#         'PORT': '3306',               # Port default MySQL
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#             'charset': 'utf8mb4',
+#         },
+#     }
+# }
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -104,7 +119,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'accounts.IncUser'
+AUTH_USER_MODEL = 'accounts.IncUsers'
+
+AUTHENTICATION_BACKENDS = [
+
+    'accounts.backends.OracleIncUsersBackend', 
+
+    'django.contrib.auth.backends.ModelBackend', 
+
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

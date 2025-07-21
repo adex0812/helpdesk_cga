@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from .models import IncUser
 from django.contrib import messages
 
 # def user_register(request):
@@ -33,15 +32,13 @@ def user_login(request):
     if request.method == "POST":
         nik = request.POST["nik"]
         password = request.POST["password"]
-        print(nik)
-        print(password)
         user = authenticate(request, username=nik, password=password)
         
         if user is not None:
             login(request, user)
             return redirect("complaint_list") 
         else:
-            messages.error(request, "Username atau password salah.")
+            messages.error(request, "NIK atau password salah.")
             return redirect("login")
 
     return render(request, 'login.html')

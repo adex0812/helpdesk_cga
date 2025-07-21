@@ -26,12 +26,13 @@ class Complaint(models.Model):
     status = models.CharField(max_length=50)
     created_at = models.DateTimeField()
     update_status_by = models.CharField(max_length=100, blank=True, null=True)
-    update_date = models.DateTimeField(blank=True, null=True)
+    update_date = models.CharField(blank=True, null=True, max_length=100)
     keterangan = models.TextField(blank=True, null=True)
     
     class Meta:
-        db_table = 'complaints'
+        db_table = 'bot_complaints_dev'
         ordering = ['-created_at']
+        managed = False
     
     def __str__(self):
         return f"{self.username} - {self.complaint_type} - {self.status}"

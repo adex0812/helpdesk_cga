@@ -24,7 +24,7 @@
                         </div>
                     {% endfor %}
                 {% endif %}
-                
+               
                 <div class="p-6">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 py-3 border-b border-gray-100">
                         <div class="font-semibold text-gray-700">Username:</div>
@@ -48,7 +48,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 py-3 border-b border-gray-100">
                         <div class="font-semibold text-gray-700">Status:</div>
                         <div class="sm:col-span-2">
-                            <span class="px-2 py-1 text-xs font-medium rounded-full 
+                            <span class="px-2 py-1 text-xs font-medium rounded-full
                                 {% if complaint.status == 'IN_PROGRESS' %}bg-yellow-100 text-yellow-800 status-pulse{% elif complaint.status == 'DONE' %}bg-green-100 text-green-800{% elif complaint.status == 'REJECT' %}bg-red-100 text-red-800{% else %}bg-blue-100 text-blue-800{% endif %}">
                                 {{ complaint.status }}
                             </span>
@@ -60,17 +60,25 @@
                         <div class="sm:col-span-2 text-gray-900">{{ complaint.description }}</div>
                     </div>
 
-                    {% if complaint.file_path %}
+                    {# START Perubahan untuk bagian FILE - TANPA CEK EKSTENSI #}
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 py-3 border-b border-gray-100">
                         <div class="font-semibold text-gray-700">File:</div>
                         <div class="sm:col-span-2">
-                            <a href="{{ complaint.file_path.url }}" class="download-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm flex items-center gap-2" download>
-                                <i class="fas fa-download"></i>
-                                Download File
-                            </a>
+                            {% if complaint.file_path %} {# Tetap penting untuk memastikan ada file #}
+                              
+                                {# Menampilkan gambar LANGSUNG - HATI-HATI! #}
+                                <div class="mt-2">
+                                    <a href="{{ complaint.absolute_file_url }}" target="_blank">
+                                        <img src="{{ complaint.absolute_file_url }}" alt="Complaint File" class="max-w-full h-auto rounded-lg shadow-md">
+                                    </a>
+                                </div>
+
+                            {% else %}
+                                <p class="text-gray-500">Tidak ada file terlampir.</p>
+                            {% endif %}
                         </div>
                     </div>
-                    {% endif %}
+                    {# END Perubahan untuk bagian FILE #}
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 py-3 border-b border-gray-100">
                         <div class="font-semibold text-gray-700">Created:</div>
@@ -111,20 +119,22 @@
                     </h6>
                 </div>
                 <div class="p-4 space-y-3">
-                    {% if complaint.status != "DONE" and complaint.status != "REJECT" %}
-                    <a href="{% url 'complaint_update_status' complaint.id %}" 
-                    class="w-full inline-block text-center bg-red-800 hover:bg-red-900 text-white px-4 py-2 rounded transition-colors duration-200 flex items-center gap-2 justify-center">
-                        <i class="fas fa-edit"></i>
-                        Update Status
-                    </a>
-                    {% endif %}
+                   {% if complaint.status != "DONE" and complaint.status != "REJECT" %}
+                   <a href="{% url 'complaint_update_status' complaint.id %}"
+                   class="w-full inline-block text-center bg-red-800 hover:bg-red-900 text-white px-4 py-2 rounded transition-colors duration-200 flex items-center gap-2 justify-center">
+                       <i class="fas fa-edit"></i>
+                       Update Status
+                   </a>
+                   {% endif %}
 
-                    <a href="{% url 'complaint_list' %}" 
-                    class="w-full inline-block text-center bg-blue-800 hover:bg-blue-900 text-white px-4 py-2 rounded transition-colors duration-200 flex items-center gap-2 justify-center">
-                        <i class="fas fa-arrow-left"></i>
-                        Back
-                    </a>
-                </div>
+
+                   <a href="{% url 'complaint_list' %}"
+                   class="w-full inline-block text-center bg-blue-800 hover:bg-blue-900 text-white px-4 py-2 rounded transition-colors duration-200 flex items-center gap-2 justify-center">
+                       <i class="fas fa-arrow-left"></i>
+                       Back
+                   </a>
+               </div>
+
             </div>
         </div>
     </div>

@@ -44,6 +44,7 @@ def complaint_list(request):
 @login_required
 def complaint_detail(request, pk):
     complaint = get_object_or_404(Complaint, pk=pk)
+    complaint.absolute_file_url = f"http://10.35.49.86/utipku/{complaint.file_path}"
     return render(request, 'detail.html', {'complaint': complaint})
 
 @login_required
