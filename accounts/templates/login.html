@@ -22,13 +22,13 @@
                 </ul>
             {% endif %}
 
-            <input type="text" name="username" placeholder="Username" class="w-full mb-4 px-4 py-2 border rounded" required>
+            <input type="text" name="nik" placeholder="nik" class="w-full mb-4 px-4 py-2 border rounded" required>
             <input type="password" name="password" placeholder="Password" class="w-full mb-6 px-4 py-2 border rounded" required>
             
             <button type="submit" class="w-full bg-red-800 text-white py-2 rounded hover:bg-red-900 transition">Login</button>
-            <p class="mt-4 text-sm text-center">
+            {% comment %} <p class="mt-4 text-sm text-center">
                 Belum punya akun? <a href="{% url 'register' %}" class="text-red-800 font-medium hover:underline">Register</a>
-            </p>
+            </p> {% endcomment %}
         </form>
     </div>
 </body>
