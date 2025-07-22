@@ -60,13 +60,11 @@
                         <div class="sm:col-span-2 text-gray-900">{{ complaint.description }}</div>
                     </div>
 
-                    {# START Perubahan untuk bagian FILE - TANPA CEK EKSTENSI #}
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 py-3 border-b border-gray-100">
                         <div class="font-semibold text-gray-700">File:</div>
                         <div class="sm:col-span-2">
-                            {% if complaint.file_path %} {# Tetap penting untuk memastikan ada file #}
+                            {% if complaint.file_path %}
                               
-                                {# Menampilkan gambar LANGSUNG - HATI-HATI! #}
                                 <div class="mt-2">
                                     <a href="{{ complaint.absolute_file_url }}" target="_blank">
                                         <img src="{{ complaint.absolute_file_url }}" alt="Complaint File" class="max-w-full h-auto rounded-lg shadow-md">
@@ -78,7 +76,6 @@
                             {% endif %}
                         </div>
                     </div>
-                    {# END Perubahan untuk bagian FILE #}
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 py-3 border-b border-gray-100">
                         <div class="font-semibold text-gray-700">Created:</div>
@@ -95,7 +92,7 @@
                     {% if complaint.update_date %}
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 py-3 border-b border-gray-100">
                         <div class="font-semibold text-gray-700">Update Date:</div>
-                        <div class="sm:col-span-2 text-gray-900">{{ complaint.update_date|date:"d-m-Y H:i:s" }}</div>
+                        <div class="sm:col-span-2 text-gray-900">{{ complaint.update_date }}</div>
                     </div>
                     {% endif %}
 
@@ -106,6 +103,16 @@
                     </div>
                     {% endif %}
 
+                    {% if complaint.evidence %}
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 py-3 border-b border-gray-100">
+                        <div class="font-semibold text-gray-700">Evidence:</div>
+                        <div class="sm:col-span-2 text-gray-900">
+                            <a href="{{ complaint.absolute_file_evidence }}" class="text-blue-600 underline" target="_blank" rel="noopener noreferrer">
+                                Lihat Evidence
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -119,7 +126,7 @@
                     </h6>
                 </div>
                 <div class="p-4 space-y-3">
-                   {% if complaint.status != "DONE" and complaint.status != "REJECT" %}
+                    {% if complaint.status != "Done" and complaint.status != "Reject" %}
                    <a href="{% url 'complaint_update_status' complaint.id %}"
                    class="w-full inline-block text-center bg-red-800 hover:bg-red-900 text-white px-4 py-2 rounded transition-colors duration-200 flex items-center gap-2 justify-center">
                        <i class="fas fa-edit"></i>

@@ -15,26 +15,26 @@
 
             <div class="p-6">
                 {% if messages %}
-                    {% for message in messages %}
-                        <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
-                            <div class="flex items-center gap-2">
-                                <i class="fas fa-check-circle"></i>
-                                <span>{{ message }}</span>
-                            </div>
-                        </div>
-                    {% endfor %}
+                {% for message in messages %}
+                <div class="mb-4 p-4 bg-gray-100 border border-gray-400 text-gray-700 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                </div>
+                {% endfor %}
                 {% endif %}
 
                 <div class="mb-4">
                     <strong class="text-gray-700">Current Status:</strong>
                     <span id="currentStatus" class="ml-2 px-2 py-1 text-xs font-medium rounded-full 
-                        {% if complaint.status == 'DONE' %}bg-green-100 text-green-800
-                        {% elif complaint.status == 'REJECT' %}bg-red-100 text-red-800
-                        {% elif complaint.status == 'IN_PROGRESS' %}bg-yellow-100 text-yellow-800
+                        {% if complaint.status == 'Done' %}bg-green-100 text-green-800
+                        {% elif complaint.status == 'Reject' %}bg-red-100 text-red-800
+                        {% elif complaint.status == 'In Progress' %}bg-yellow-100 text-yellow-800
                         {% else %}bg-blue-100 text-blue-800{% endif %}">
-                        {% if complaint.status == 'DONE' %}Done
-                        {% elif complaint.status == 'REJECT' %}Rejected
-                        {% elif complaint.status == 'IN_PROGRESS' %}In Progress
+                        {% if complaint.status == 'Done' %}Done
+                        {% elif complaint.status == 'Reject' %}Rejected
+                        {% elif complaint.status == 'In Progress' %}In Progress
                         {% else %}Pending{% endif %}
                     </span>
                 </div>
@@ -48,18 +48,14 @@
 
                 <hr class="my-6 border-gray-200">
 
-                <form id="updateStatusForm" method="post" class="space-y-6">
+                <form id="updateStatusForm" method="post" class="space-y-6" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
                             New Status <span class="text-red-500">*</span>
                         </label>
-                        <select 
-                            id="status" 
-                            name="status" 
-                            required
-                            class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all duration-200 appearance-none"
-                        >
+                        <select id="status" name="status" required
+                            class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all duration-200 appearance-none">
                             <option value="">Select new status...</option>
                             <option value="In Progress">In Progress</option>
                             <option value="Done">Done</option>
@@ -71,17 +67,9 @@
                         <label for="updateStatusBy" class="block text-sm font-medium text-gray-700 mb-2">
                             Updated By
                         </label>
-                        <input 
-                            type="text" 
-                            id="updateStatusBy" 
-                            name="update_status_by" 
-                            required
-                            placeholder="Enter your name or ID"
-                            class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all duration-200 
-                                bg-gray-200 cursor-not-allowed"
-                            value="{{ user.name }}"
-                            readonly
-                        />
+                        <input type="text" id="updateStatusBy" name="update_status_by" required
+                            placeholder="Enter your name or ID" class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all duration-200 
+                                bg-gray-200 cursor-not-allowed" value="{{ user.name }}" readonly />
 
                     </div>
 
@@ -89,30 +77,33 @@
                         <label for="keterangan" class="block text-sm font-medium text-gray-700 mb-2">
                             Notes
                         </label>
-                        <textarea 
-                            id="keterangan" 
-                            name="keterangan" 
-                            rows="4"
+                        <textarea id="keterangan" name="keterangan" rows="4"
                             placeholder="Add any additional notes or comments about this status update..."
-                            class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all duration-200 resize-vertical"
-                        >{{ complaint.keterangan }}</textarea>
+                            class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all duration-200 resize-vertical">{{ complaint.keterangan }}</textarea>
                         <div class="mt-1 text-sm text-gray-500">
                             Optional: Provide additional context for this status change.
                         </div>
                     </div>
 
+                    <div>
+                        <label for="evidence" class="block text-sm font-medium text-gray-700 mb-2">
+                            Upload Evidence (Optional)
+                        </label>
+                        <input type="file" id="evidence" name="evidence"
+                            class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all duration-200" />
+                        <div class="mt-1 text-sm text-gray-500">
+                            Optional: Upload supporting document/image.
+                        </div>
+                    </div>
+
                     <div class="flex flex-col sm:flex-row justify-between gap-4 pt-4">
                         <a href="{% url 'complaint_list' %}"
-                            class="px-6 py-2 border text-center border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
-                        >
+                            class="px-6 py-2 border text-center border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2">
                             <i class="fas fa-arrow-left"></i>
                             Cancel
                         </a>
-                        <button 
-                            type="submit" 
-                            id="submitBtn"
-                            class="px-6 py-2 bg-red-800 hover:bg-red-900 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
-                        >
+                        <button type="submit" id="submitBtn"
+                            class="px-6 py-2 bg-red-800 hover:bg-red-900 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2">
                             <i class="fas fa-save"></i>
                             Update Status
                         </button>
@@ -129,7 +120,7 @@
         border-color: #991b1b;
         box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.1);
     }
-    
+
     /* Custom select styling */
     select.form-input {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
@@ -149,6 +140,7 @@
             opacity: 0;
             transform: translateY(-10px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);

@@ -14,9 +14,10 @@ class ComplaintForm(forms.ModelForm):
         }
 
 class UpdateStatusForm(forms.ModelForm):
+    evidence = forms.FileField(required=False) #tambah sendiri 
     class Meta:
         model = Complaint
-        fields = ['status', 'update_status_by', 'keterangan']
+        fields = ['status', 'update_status_by', 'keterangan', 'evidence']
         widgets = {
             'status': forms.Select(attrs={'class': 'form-control'}),
             'update_status_by': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Updated by'}),

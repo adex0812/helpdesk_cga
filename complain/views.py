@@ -10,6 +10,10 @@ from .forms import UpdateStatusForm
 import requests
 from django.utils.html import escape
 from django.contrib.auth.decorators import login_required
+import os
+from django.core.files.storage import FileSystemStorage
+from datetime import timedelta, datetime
+import pytz
 
 @login_required
 def complaint_list(request):
@@ -45,6 +49,7 @@ def complaint_list(request):
 def complaint_detail(request, pk):
     complaint = get_object_or_404(Complaint, pk=pk)
     complaint.absolute_file_url = f"http://10.35.49.86/utipku/{complaint.file_path}"
+    complaint.absolute_file_evidence =  f"http://10.35.49.86/utipku/uploads/evidence/{complaint.evidence}"
     return render(request, 'detail.html', {'complaint': complaint})
 
 @login_required
@@ -52,19 +57,40 @@ def complaint_update_status(request, pk):
     complaint = get_object_or_404(Complaint, pk=pk)
     
     if request.method == 'POST':
-        form = UpdateStatusForm(request.POST, instance=complaint)
+        form = UpdateStatusForm(request.POST, request.FILES, instance=complaint)  # <- include FILES
         if form.is_valid():
             complaint = form.save(commit=False)
-            complaint.update_date = timezone.now()
+            current_time_utc = timezone.now()
+            time_plus_7_hours = current_time_utc + timedelta(hours=7)
+
+            formatted_date_string = time_plus_7_hours.strftime("%d-%m-%Y %H:%M:%S")
+            complaint.update_date = formatted_date_string
+
+
+            # 🔽 Simpan file evidence jika ada
+            # evidence = request.FILES.get('evidence')
+            # if evidence:
+            #     upload_dir = r"G:\laragon\utipku\uploads\evidence"
+            #     os.makedirs(upload_dir, exist_ok=True)
+
+            #     fs = FileSystemStorage(location=upload_dir)
+            #     filename = fs.save(evidence.name, evidence)
+            #     complaint.evidence = filename  # <- simpan nama file ke DB
+
             complaint.save()
 
+            # 🔔 Kirim notifikasi Telegram
             token = '7780641652:AAHuJbouT-Y5IKvJRwcqjG5WtBJix3NY9yA'
             chat_id = complaint.user_id  
             description = escape(complaint.description)
             status = escape(complaint.status)
             keterangan = escape(complaint.keterangan)
+            eviden = escape(complaint.evidence)
             
-            message = f"Komplain atau permintaan Anda dengan deskripsi {description} telah diproses dengan status {status} dan keterangannya {keterangan}"
+            message = f"📝 Komplain atau permintaan Anda dengan deskripsi:\n\n\"{description}\"\n\nTelah diproses dengan status: *{status}*\nKeterangan: {keterangan}"
+            if complaint.evidence:
+                file_link = f"http://10.35.49.86/utipku/uploads/evidence/{complaint.evidence}"
+                message += f"\n\n📎 Berikut adalah dokumen atau bukti evidennya:\n{file_link}"
             api_url = f"https://api.telegram.org/bot{token}/sendMessage"
             payload = {
                 'chat_id': chat_id,
@@ -84,8 +110,7 @@ def complaint_update_status(request, pk):
     return render(request, 'update_status.html', {
         'form': form,
         'complaint': complaint,
-        'user': request.user, 
-        'complaint': complaint
+        'user': request.user
     })
 
 def complaint_api(request):

@@ -4,10 +4,10 @@ from django.utils import timezone
 
 class Complaint(models.Model):
     STATUS_CHOICES = [
-        ('PENDING', 'Pending'),
-        ('DONE', 'Done'),
-        ('REJECT', 'Reject'),
-        ('IN_PROGRESS', 'In Progress'),
+        ('Pending', 'Pending'),
+        ('Done', 'Done'),
+        ('Reject', 'Reject'),
+        ('In Progress', 'In Progress'),
     ]
     
     COMPLAINT_TYPE_CHOICES = [
@@ -28,6 +28,7 @@ class Complaint(models.Model):
     update_status_by = models.CharField(max_length=100, blank=True, null=True)
     update_date = models.CharField(blank=True, null=True, max_length=100)
     keterangan = models.TextField(blank=True, null=True)
+    evidence = models.CharField(max_length=255, null=True, blank=True)
     
     class Meta:
         db_table = 'bot_complaints_dev'

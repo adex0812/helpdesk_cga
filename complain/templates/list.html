@@ -31,10 +31,10 @@
             onchange="this.form.submit()"
         >
             <option value="ALL" {% if status_filter == "ALL" %}selected{% endif %}>All Status</option>
-            <option value="PENDING" {% if status_filter == "PENDING" %}selected{% endif %}>Pending</option>
-            <option value="IN_PROGRESS" {% if status_filter == "IN_PROGRESS" %}selected{% endif %}>In Progress</option>
-            <option value="DONE" {% if status_filter == "DONE" %}selected{% endif %}>Done</option>
-            <option value="REJECT" {% if status_filter == "REJECT" %}selected{% endif %}>Rejected</option>
+            <option value="Pending" {% if status_filter == "Pending" %}selected{% endif %}>Pending</option>
+            <option value="In Progress" {% if status_filter == "In Progress" %}selected{% endif %}>In Progress</option>
+            <option value="Done" {% if status_filter == "Done" %}selected{% endif %}>Done</option>
+            <option value="Reject" {% if status_filter == "Reject" %}selected{% endif %}>Rejected</option>
         </select>
     </div>
 </form>
@@ -68,11 +68,11 @@
                         </span>
                     </td>
                     <td class="px-6 py-4">
-                        {% if complaint.status == "DONE" %}
+                        {% if complaint.status == "Done" %}
                             <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Done</span>
-                        {% elif complaint.status == "REJECT" %}
+                        {% elif complaint.status == "Reject" %}
                             <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Rejected</span>
-                        {% elif complaint.status == "IN_PROGRESS" %}
+                        {% elif complaint.status == "In Progress" %}
                             <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">In Progress</span>
                         {% else %}
                             <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">Pending</span>
@@ -84,7 +84,8 @@
                             <a href="{% url 'complaint_detail' complaint.id %}" class="px-2 py-1 text-xs border border-blue-300 text-blue-600 hover:bg-blue-50 rounded transition-colors duration-200">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            {% if complaint.status != "DONE" and complaint.status != "REJECT" %}
+                            
+                            {% if complaint.status != "Done" and complaint.status != "Reject" %}    
                                 <a href="{% url 'complaint_update_status' complaint.id %}" class="px-2 py-1 text-xs border border-yellow-300 text-yellow-600 hover:bg-yellow-50 rounded transition-colors duration-200">
                                     <i class="fas fa-edit"></i>
                                 </a>
