@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'complain',
-    'accounts'
+    'accounts',
+    'dashboard'
 ]
 
 MIDDLEWARE = [
@@ -82,7 +83,7 @@ DATABASES = {
         'USER': 'USR_CDM',
         'PASSWORD': 'CGADSSDPS2023',
         'HOST': '10.60.160.44',
-        'PORT': '1521',
+        'PORT': '1521'
     }
 }
 

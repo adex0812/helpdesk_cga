@@ -18,10 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from complain import urls as complain_urls
 from accounts import urls as accounts_urls
+from dashboard import urls as dashboard_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(complain_urls)),
     path('accounts/', include(accounts_urls)),
+    path('dashboard/', include(dashboard_urls)),
 ]
 

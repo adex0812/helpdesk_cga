@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Bot Project{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="flex justify-between items-center mb-8">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800">Complaint Dashboard</h1>
+        <p class="text-gray-600 mt-2">Overview of complaint handling status</p>
+    </div>
+    <button onclick="refreshData()" class="bg-red-800 hover:bg-red-900 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2">
+        <i class="fas fa-sync"></i>
+        Refresh Data
+    </button>
+</div>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Total Complaints -->
+    <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-800">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Complaints</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">{{ total_complaints }}</p>
+            </div>
+            <div class="bg-red-100 p-3 rounded-full">
+                <i class="fas fa-clipboard-list text-red-800 text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Count -->
+    <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-yellow-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Pending</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">{{ total_pending }}</p>
+            </div>
+            <div class="bg-yellow-100 p-3 rounded-full">
+                <i class="fas fa-clock text-yellow-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Done Count -->
+    <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Completed</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">{{ total_done }}</p>
+            </div>
+            <div class="bg-green-100 p-3 rounded-full">
+                <i class="fas fa-check-circle text-green-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- In Progress Count -->
+    <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">In Progress</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">{{ total_in_progress }}</p>
+            </div>
+            <div class="bg-blue-100 p-3 rounded-full">
+                <i class="fas fa-spinner text-blue-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Summary Table -->
+    <div class="lg:col-span-2">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-red-800 text-white px-6 py-4">
+                <h2 class="text-xl font-semibold flex items-center gap-2">
+                    <i class="fas fa-table"></i>
+                    Complaint Summary by User
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-50 border-b border-gray-200">
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Pending</th>
+                                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">In Progress</th>
+                                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Done</th>
+                                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Rejected</th>
+                                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for item in summary_data %}
+                            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{{ forloop.counter }}</td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8">
+                                            <div class="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center">
+                                                <i class="fas fa-user text-red-800 text-sm"></i>
+                                            </div>
+                                        </div>
+                                        <div class="ml-3">
+                                            <div class="text-sm font-medium text-gray-900">{{ item.username }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-center">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        {{ item.pending }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-center">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        {{ item.in_progress }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-center">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        {{ item.done }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-center">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        {{ item.rejected }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-center">
+                                    <span class="text-sm font-semibold text-gray-900">{{ item.total }}</span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="px-4 py-8 text-center text-gray-500">
+                                    <i class="fas fa-inbox text-4xl mb-4 block"></i>
+                                    No data available
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="space-y-8">
+        <!-- Status Distribution Chart -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-red-800 text-white px-6 py-4">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                    <i class="fas fa-chart-pie"></i>
+                    Status Distribution
+                </h3>
+            </div>
+            <div class="p-6">
+                <canvas id="statusChart" class="w-full h-64"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Refresh function
+function refreshData() {
+    location.reload();
+}
+
+// Chart.js for status distribution - use totals from Django
+const totalPending = {{ total_pending }};
+const totalInProgress = {{ total_in_progress }};
+const totalDone = {{ total_done }};
+const totalRejected = {{ total_rejected }};
+
+const ctx = document.getElementById('statusChart');
+if (ctx) {
+    const statusChart = new Chart(ctx.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Pending', 'In Progress', 'Done', 'Rejected'],
+            datasets: [{
+                data: [totalPending, totalInProgress, totalDone, totalRejected],
+                backgroundColor: [
+                    '#FCD34D', // yellow-300
+                    '#60A5FA', // blue-400
+                    '#34D399', // green-400
+                    '#F87171'  // red-400
+                ],
+                borderColor: [
+                    '#F59E0B', // yellow-500
+                    '#3B82F6', // blue-500
+                    '#10B981', // green-500
+                    '#EF4444'  // red-500
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true,
+                        font: {
+                            size: 12
+                        }
+                    }
+                }
+            },
+            cutout: '60%'
+        }
+    });
+}
+</script>
+{% endblock %}
+
+
