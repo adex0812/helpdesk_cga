@@ -68,14 +68,17 @@ def complaint_update_status(request, pk):
 
 
             # 🔽 Simpan file evidence jika ada
-            # evidence = request.FILES.get('evidence')
-            # if evidence:
-            #     upload_dir = r"G:\laragon\utipku\uploads\evidence"
-            #     os.makedirs(upload_dir, exist_ok=True)
+            evidence = request.FILES.get('evidence')
+            if evidence:
+                upload_dir = r"G:\laragon\utipku\uploads\evidence"
+                os.makedirs(upload_dir, exist_ok=True)
 
-            #     fs = FileSystemStorage(location=upload_dir)
-            #     filename = fs.save(evidence.name, evidence)
-            #     complaint.evidence = filename  # <- simpan nama file ke DB
+                fs = FileSystemStorage(location=upload_dir)
+                original_filename = evidence.name
+                modified_filename = original_filename.replace(" ", "_")
+
+                filename = fs.save(modified_filename, evidence)
+                complaint.evidence = filename
 
             complaint.save()
 
